@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { db } from "../firebase"
 import {
   collection,
@@ -6,9 +6,6 @@ import {
   getDocs,
   query,
   where,
-  doc,
-  getDoc,
-  updateDoc
 } from "firebase/firestore"
 
 export default function RSVP() {
@@ -19,19 +16,7 @@ export default function RSVP() {
   })
 
   const [loading, setLoading] = useState(false)
-  const [isOpen, setIsOpen] = useState(true)
-
-  useEffect(() => {
-    checkStatus()
-  }, [])
-
-  const checkStatus = async () => {
-    const snap = await getDoc(doc(db, "settings", "rsvp"))
-
-    if (snap.exists()) {
-      setIsOpen(snap.data().open)
-    }
-  }
+  const [confirmed, setConfirmed] = useState(false)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -40,14 +25,9 @@ export default function RSVP() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!isOpen) {
-      alert("RSVP já foi encerrado 💔")
-      return
-    }
-
     setLoading(true)
 
-    // bloqueia nome duplicado
+    // 🔍 verifica duplicado
     const q = query(
       collection(db, "rsvps"),
       where("name", "==", form.name)
@@ -56,12 +36,12 @@ export default function RSVP() {
     const snapshot = await getDocs(q)
 
     if (!snapshot.empty) {
-      alert("Esse nome já confirmou 💔")
+      alert("Esse nome já confirmou presença 💔")
       setLoading(false)
       return
     }
 
-    // salva RSVP
+    // 💾 salva no Firebase
     await addDoc(collection(db, "rsvps"), {
       name: form.name,
       email: form.email,
@@ -69,28 +49,22 @@ export default function RSVP() {
       createdAt: new Date(),
     })
 
-    // 🔒 fecha o RSVP automaticamente
-    await updateDoc(doc(db, "settings", "rsvp"), {
-      open: false
-    })
-
-    setIsOpen(false)
-
-    alert("Presença confirmada 💍")
-
+    setConfirmed(true)
     setForm({ name: "", email: "", guests: 1 })
     setLoading(false)
   }
 
-  if (!isOpen) {
+  // 💍 TELA DE SUCESSO
+  if (confirmed) {
     return (
       <section className="min-h-screen flex items-center justify-center bg-black text-white text-center px-6">
         <div>
-          <h2 className="text-3xl font-light">
-            RSVP Encerrado 💔
+          <h2 className="text-4xl font-light mb-4">
+            Presença confirmada 💍
           </h2>
-          <p className="text-gray-400 mt-2">
-            Obrigado por fazer parte desse momento 💍
+
+          <p className="text-gray-400">
+            Obrigado por fazer parte desse momento tão especial ❤️
           </p>
         </div>
       </section>
