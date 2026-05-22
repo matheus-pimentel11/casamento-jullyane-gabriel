@@ -6,51 +6,65 @@ import {
   getDocs,
   query,
   where,
+  doc,
+  updateDoc,
 } from "firebase/firestore"
 
 export default function RSVP() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    guests: 1,
-  })
-
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [guests, setGuests] = useState(1)
   const [loading, setLoading] = useState(false)
   const [confirmed, setConfirmed] = useState(false)
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     setLoading(true)
 
-    // 🔍 verifica duplicado
-    const q = query(
-      collection(db, "rsvps"),
-      where("name", "==", form.name)
-    )
+    try {
+      // 🔍 1. verificar se está na lista de convidados
+      const q = query(
+        collection(db, "guests"),
+        where("name", "==", name)
+      )
 
-    const snapshot = await getDocs(q)
+      const snap = await getDocs(q)
 
-    if (!snapshot.empty) {
-      alert("Esse nome já confirmou presença 💔")
-      setLoading(false)
-      return
+      if (snap.empty) {
+        alert("Seu nome não está na lista de convidados 💔")
+        setLoading(false)
+        return
+      }
+
+      const guestDoc = snap.docs[0]
+      const guestData = guestDoc.data()
+
+      // 🔒 2. impedir duplicado
+      if (guestData.confirmed) {
+        alert("Esse convite já foi confirmado 💔")
+        setLoading(false)
+        return
+      }
+
+      // 💾 3. salvar RSVP
+      await addDoc(collection(db, "rsvps"), {
+        name,
+        email,
+        guests: Number(guests),
+        createdAt: new Date(),
+      })
+
+      // ✔ 4. marcar como confirmado na lista
+      await updateDoc(doc(db, "guests", guestDoc.id), {
+        confirmed: true,
+      })
+
+      setConfirmed(true)
+    } catch (error) {
+      console.log(error)
+      alert("Erro ao confirmar presença")
     }
 
-    // 💾 salva no Firebase
-    await addDoc(collection(db, "rsvps"), {
-      name: form.name,
-      email: form.email,
-      guests: Number(form.guests),
-      createdAt: new Date(),
-    })
-
-    setConfirmed(true)
-    setForm({ name: "", email: "", guests: 1 })
     setLoading(false)
   }
 
@@ -64,7 +78,7 @@ export default function RSVP() {
           </h2>
 
           <p className="text-gray-400">
-            Obrigado por fazer parte desse momento tão especial ❤️
+            Obrigado por fazer parte desse momento especial ❤️
           </p>
         </div>
       </section>
@@ -72,8 +86,10 @@ export default function RSVP() {
   }
 
   return (
-    <section id="rsvp" className="min-h-screen flex items-center justify-center bg-black text-white px-6">
-
+    <section
+      id="rsvp"
+      className="min-h-screen flex items-center justify-center bg-black text-white px-6"
+    >
       <form onSubmit={handleSubmit} className="max-w-md w-full space-y-4">
 
         <h2 className="text-3xl font-light text-center mb-6">
@@ -81,29 +97,26 @@ export default function RSVP() {
         </h2>
 
         <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           placeholder="Nome completo"
           className="w-full p-3 rounded bg-zinc-800"
           required
         />
 
         <input
-          name="email"
-          value={form.email}
-          onChange={handleChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           className="w-full p-3 rounded bg-zinc-800"
           required
         />
 
         <input
-          name="guests"
           type="number"
           min="1"
-          value={form.guests}
-          onChange={handleChange}
+          value={guests}
+          onChange={(e) => setGuests(e.target.value)}
           className="w-full p-3 rounded bg-zinc-800"
         />
 
@@ -111,11 +124,10 @@ export default function RSVP() {
           disabled={loading}
           className="w-full bg-white text-black py-3 rounded hover:scale-105 transition"
         >
-          {loading ? "Enviando..." : "Confirmar Presença"}
+          {loading ? "Verificando..." : "Confirmar Presença"}
         </button>
 
       </form>
-
     </section>
   )
 }
