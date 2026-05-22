@@ -1,6 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { db } from "../firebase"
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore"
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+  getDoc,
+  updateDoc
+} from "firebase/firestore"
 
 export default function RSVP() {
   const [form, setForm] = useState({
@@ -10,6 +19,19 @@ export default function RSVP() {
   })
 
   const [loading, setLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
+
+  useEffect(() => {
+    checkStatus()
+  }, [])
+
+  const checkStatus = async () => {
+    const snap = await getDoc(doc(db, "settings", "rsvp"))
+
+    if (snap.exists()) {
+      setIsOpen(snap.data().open)
+    }
+  }
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -18,11 +40,14 @@ export default function RSVP() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!form.name) return
+    if (!isOpen) {
+      alert("RSVP já foi encerrado 💔")
+      return
+    }
 
     setLoading(true)
 
-    // 🔍 checar se nome já existe
+    // bloqueia nome duplicado
     const q = query(
       collection(db, "rsvps"),
       where("name", "==", form.name)
@@ -31,12 +56,12 @@ export default function RSVP() {
     const snapshot = await getDocs(q)
 
     if (!snapshot.empty) {
-      alert("Esse nome já confirmou presença 💔")
+      alert("Esse nome já confirmou 💔")
       setLoading(false)
       return
     }
 
-    // 💾 salvar
+    // salva RSVP
     await addDoc(collection(db, "rsvps"), {
       name: form.name,
       email: form.email,
@@ -44,11 +69,32 @@ export default function RSVP() {
       createdAt: new Date(),
     })
 
+    // 🔒 fecha o RSVP automaticamente
+    await updateDoc(doc(db, "settings", "rsvp"), {
+      open: false
+    })
+
+    setIsOpen(false)
+
     alert("Presença confirmada 💍")
 
     setForm({ name: "", email: "", guests: 1 })
-
     setLoading(false)
+  }
+
+  if (!isOpen) {
+    return (
+      <section className="min-h-screen flex items-center justify-center bg-black text-white text-center px-6">
+        <div>
+          <h2 className="text-3xl font-light">
+            RSVP Encerrado 💔
+          </h2>
+          <p className="text-gray-400 mt-2">
+            Obrigado por fazer parte desse momento 💍
+          </p>
+        </div>
+      </section>
+    )
   }
 
   return (
