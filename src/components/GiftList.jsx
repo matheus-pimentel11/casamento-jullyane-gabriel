@@ -2,23 +2,25 @@ import { useEffect, useState } from "react"
 import { db } from "../firebase"
 import { collection, addDoc, getDocs } from "firebase/firestore"
 
-const gifts = [
-  "Vale pizza 🍕",
-  "Lua de mel ✈️",
-  "PIX do amor 💸",
-  "Netflix 🎬",
-  "Jantar sem lavar louça 🍝",
-  "Robô aspirador dos sonhos 🧹",
-  "Kit pipoca e cobertor 🍿",
-  "Cota mercado pós-casamento 🛒",
-  "Cota sofá dos cochilos 🛋️",
-  "Vale date night 🌙",
-  "Cota plantas que sobrevivam 🌿",
-  "Primeiro boleto juntos 🧾",
-  "Caixa de ferramentas do casal 🔧",
-  "Kit café da manhã preguiçoso 🥐",
-  "Fundo emergencial do delivery 🛵",
-]
+const giftPrices = {
+  "Airfryer 💖": "R$ 700",
+  "Vale pizza 🍕": "R$ 100",
+  "Cafeteira ☕": "R$ 350",
+  "Lua de mel ✈️": "12 cotas de R$ 100",
+  "PIX do amor 💸": "A partir de R$ 100",
+  "Netflix 🎬": "R$ 240",
+  "Jantar sem lavar louça 🍝": "R$ 300",
+  "Robô aspirador dos sonhos 🧹": "18 cotas de R$ 100",
+  "Kit pipoca e cobertor 🍿": "R$ 180",
+  "Cota mercado pós-casamento 🛒": "5 cotas de R$ 100",
+  "Cota sofá dos cochilos 🛋️": "10 cotas de R$ 100",
+  "Vale date night 🌙": "R$ 250",
+  "Cota plantas que sobrevivam 🌿": "R$ 150",
+  "Primeiro boleto juntos 🧾": "R$ 300",
+  "Caixa de ferramentas do casal 🔧": "R$ 350",
+  "Kit café da manhã preguiçoso 🥐": "R$ 180",
+  "Fundo emergencial do delivery 🛵": "R$ 200",
+}
 
 async function getTakenGifts() {
   const snap = await getDocs(collection(db, "giftClaims"))
@@ -123,7 +125,7 @@ export default function GiftList() {
                 </div>
 
                 <div className="text-sm font-semibold text-green-600 mt-1">
-                  R$ 100,00
+                  {giftPrices[gift]}
                 </div>
 
                 <div className="text-sm text-gray-400 mt-1">
