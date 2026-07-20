@@ -3,9 +3,7 @@ import { db } from "../firebase"
 import { collection, addDoc, getDocs } from "firebase/firestore"
 
 const gifts = [
-  "Airfryer 💖",
   "Vale pizza 🍕",
-  "Cafeteira ☕",
   "Lua de mel ✈️",
   "PIX do amor 💸",
   "Netflix 🎬",
@@ -13,7 +11,6 @@ const gifts = [
   "Robô aspirador dos sonhos 🧹",
   "Kit pipoca e cobertor 🍿",
   "Cota mercado pós-casamento 🛒",
-  "Panela para receitas corajosas 🍲",
   "Cota sofá dos cochilos 🛋️",
   "Vale date night 🌙",
   "Cota plantas que sobrevivam 🌿",
@@ -123,6 +120,10 @@ export default function GiftList() {
 
                 <div className="text-lg font-medium">
                   {gift}
+                </div>
+
+                <div className="text-sm font-semibold text-green-600 mt-1">
+                  R$ 100,00
                 </div>
 
                 <div className="text-sm text-gray-400 mt-1">
