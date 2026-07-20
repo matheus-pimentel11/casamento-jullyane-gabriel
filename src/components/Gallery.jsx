@@ -1,12 +1,11 @@
 import { motion } from "framer-motion"
 
 const images = [
-  "/foto 1.jpeg",
-  "/foto 2.jpeg",
-  "/foto 3.jpeg",
-  "/foto 4.jpeg",
-  "/foto 5.jpeg",
-  "/foto 1.jpeg",
+  "/fotos/foto-1.jpg",
+  "/fotos/foto-2.jpg",
+  "/fotos/foto-3.jpg",
+  "/fotos/foto-4.jpg",
+  "/fotos/foto-5.jpg",
 ]
 
 export default function Gallery() {
@@ -36,7 +35,7 @@ export default function Gallery() {
             >
               <img
                 src={img}
-                alt=""
+                alt={`Foto ${index + 1} de Jullyane e Gabriel`}
                 className="w-full h-64 object-cover hover:scale-110 transition duration-500"
               />
             </motion.div>

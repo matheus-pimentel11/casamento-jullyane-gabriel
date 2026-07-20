@@ -1,20 +1,28 @@
 import { motion } from "framer-motion"
+import Countdown from "./Countdown"
 
 function Hero() {
     return (
         <section id="home"
-            className="h-screen bg-cover bg-center relative flex items-center justify-center"
-            style={{
-                backgroundImage:
-                    "url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2070&auto=format&fit=crop')",
-            }}
+            className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-4 py-28"
         >
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-black/50"></div>
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 scale-110 bg-cover bg-center blur-sm"
+                style={{ backgroundImage: "url('/fotos/foto-1.jpg')" }}
+            ></div>
+
+            <img
+                src="/fotos/foto-1.jpg"
+                alt=""
+                className="absolute inset-0 h-full w-full object-contain object-center opacity-80"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/65"></div>
 
             {/* Conteúdo */}
             <motion.div
-                className="relative z-10 text-center text-white px-4"
+                className="relative z-10 w-full max-w-4xl text-center text-white"
                 initial={{ opacity: 0, y: 80 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2 }}
@@ -45,6 +53,8 @@ function Hero() {
                 >
                     14 de Novembro de 2026
                 </motion.p>
+
+                <Countdown />
 
                 <motion.button
                     className="mt-10 px-8 py-4 border border-white text-white rounded-full bg-white/10 backdrop-blur-sm hover:bg-white hover:text-black transition duration-300"

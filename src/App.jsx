@@ -1,7 +1,6 @@
 import Navbar from "./components/Navbar"
 import Hero from "./components/Hero"
 import Story from "./components/Story"
-import Countdown from "./components/Countdown"
 import Gallery from "./components/Gallery"
 import RSVP from "./components/RSVP"
 import GiftList from "./components/GiftList"
@@ -17,8 +16,6 @@ function App() {
       <Hero />
 
       <Story />
-
-      <Countdown />
 
       <Gallery />
 

@@ -9,7 +9,24 @@ const gifts = [
   "Lua de mel ✈️",
   "PIX do amor 💸",
   "Netflix 🎬",
+  "Jantar sem lavar louça 🍝",
+  "Robô aspirador dos sonhos 🧹",
+  "Kit pipoca e cobertor 🍿",
+  "Cota mercado pós-casamento 🛒",
+  "Panela para receitas corajosas 🍲",
+  "Cota sofá dos cochilos 🛋️",
+  "Vale date night 🌙",
+  "Cota plantas que sobrevivam 🌿",
+  "Primeiro boleto juntos 🧾",
+  "Caixa de ferramentas do casal 🔧",
+  "Kit café da manhã preguiçoso 🥐",
+  "Fundo emergencial do delivery 🛵",
 ]
+
+async function getTakenGifts() {
+  const snap = await getDocs(collection(db, "giftClaims"))
+  return snap.docs.map((doc) => doc.data().gift)
+}
 
 export default function GiftList() {
   const [name, setName] = useState("")
@@ -17,16 +34,26 @@ export default function GiftList() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    load()
+    let active = true
+
+    getTakenGifts().then((giftNames) => {
+      if (active) {
+        setTakenGifts(giftNames)
+      }
+    })
+
+    return () => {
+      active = false
+    }
   }, [])
 
-  const load = async () => {
-    const snap = await getDocs(collection(db, "giftClaims"))
-    setTakenGifts(snap.docs.map((d) => d.data().gift))
+  const refreshTakenGifts = async () => {
+    const giftNames = await getTakenGifts()
+    setTakenGifts(giftNames)
   }
 
   const claimGift = async (gift) => {
-    if (!name) return alert("Digite seu nome 😄")
+    if (!name.trim()) return alert("Digite seu nome 😄")
 
     if (takenGifts.includes(gift)) {
       alert("Esse presente já foi escolhido 💔")
@@ -35,15 +62,18 @@ export default function GiftList() {
 
     setLoading(true)
 
-    await addDoc(collection(db, "giftClaims"), {
-      name,
-      gift,
-      createdAt: new Date(),
-    })
+    try {
+      await addDoc(collection(db, "giftClaims"), {
+        name: name.trim(),
+        gift,
+        createdAt: new Date(),
+      })
 
-    setName("")
-    load()
-    setLoading(false)
+      setName("")
+      await refreshTakenGifts()
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -64,7 +94,7 @@ export default function GiftList() {
         <div className="flex justify-center mb-12">
           <input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(event) => setName(event.target.value)}
             placeholder="Digite seu nome"
             className="p-3 w-full max-w-sm border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
           />
@@ -73,12 +103,12 @@ export default function GiftList() {
         {/* GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
-          {gifts.map((gift, i) => {
+          {gifts.map((gift) => {
             const taken = takenGifts.includes(gift)
 
             return (
               <button
-                key={i}
+                key={gift}
                 onClick={() => claimGift(gift)}
                 disabled={taken || loading}
                 className={`

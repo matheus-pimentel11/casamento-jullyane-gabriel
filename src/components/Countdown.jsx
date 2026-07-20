@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 
+const weddingDate = new Date("2026-11-14T00:00:00")
+
+function getTimeLeft() {
+  const now = new Date()
+  const diff = Math.max(weddingDate - now, 0)
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
+  const minutes = Math.floor((diff / (1000 * 60)) % 60)
+  const seconds = Math.floor((diff / 1000) % 60)
+
+  return { days, hours, minutes, seconds }
+}
+
 export default function Countdown() {
-  const weddingDate = new Date("2026-11-14T00:00:00")
-
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft())
-
-  function getTimeLeft() {
-    const now = new Date()
-    const diff = weddingDate - now
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
-    const minutes = Math.floor((diff / (1000 * 60)) % 60)
-    const seconds = Math.floor((diff / 1000) % 60)
-
-    return { days, hours, minutes, seconds }
-  }
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -27,39 +27,34 @@ export default function Countdown() {
   }, [])
 
   const box = (value, label) => (
-    <div className="text-center">
-      <div className="text-4xl md:text-6xl font-light">
+    <div className="rounded-lg border border-white/20 bg-white/10 px-2 py-4 text-center backdrop-blur-sm">
+      <div className="text-2xl sm:text-4xl md:text-5xl font-light tabular-nums">
         {String(value).padStart(2, "0")}
       </div>
-      <div className="text-sm uppercase tracking-widest text-gray-500 mt-2">
+      <div className="mt-2 text-[10px] uppercase tracking-[0.25em] text-white/75 sm:text-xs">
         {label}
       </div>
     </div>
   )
 
   return (
-    <section id="cerimonia" className="min-h-screen flex items-center justify-center bg-black text-white px-6">
+    <motion.div
+      id="cerimonia"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.6 }}
+      className="mx-auto mt-10 w-full max-w-3xl"
+    >
+      <h2 className="text-sm font-normal uppercase tracking-[0.35em] text-white/85">
+        Contagem Regressiva
+      </h2>
 
-      <div className="text-center">
-
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-3xl md:text-4xl font-light mb-12"
-        >
-          Contagem Regressiva
-        </motion.h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {box(timeLeft.days, "Dias")}
-          {box(timeLeft.hours, "Horas")}
-          {box(timeLeft.minutes, "Min")}
-          {box(timeLeft.seconds, "Seg")}
-        </div>
-
+      <div className="mt-5 grid grid-cols-4 gap-2 sm:gap-4">
+        {box(timeLeft.days, "Dias")}
+        {box(timeLeft.hours, "Horas")}
+        {box(timeLeft.minutes, "Min")}
+        {box(timeLeft.seconds, "Seg")}
       </div>
-
-    </section>
+    </motion.div>
   )
 }
