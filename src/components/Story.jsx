@@ -21,9 +21,8 @@ export default function Story() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mt-8 text-gray-600 text-lg leading-relaxed"
         >
-          Tudo começou de forma simples, mas especial. Dois caminhos diferentes
-          que se cruzaram no momento certo. Entre conversas, risadas e sonhos
-          compartilhados, nasceu algo que hoje celebramos com muito amor.
+          Nossa história começou de um jeito simples, mas Deus já havia preparado cada detalhe. Entre conversas, risadas, aprendizados e muitos momentos especiais, fomos construindo um amor baseado no respeito, na amizade e na fé.
+          Hoje, olhamos para tudo o que vivemos com gratidão e alegria. Cada etapa nos trouxe até aqui, e agora nos preparamos para dizer o nosso “sim” diante de Deus, iniciando um novo capítulo das nossas vidas, cercados pelas pessoas que mais amamos.
         </motion.p>
 
       </div>
