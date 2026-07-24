@@ -8,7 +8,7 @@ const gifts = [
   "PIX do amor 💸",
   "Netflix 🎬",
   "Jantar sem lavar louça 🍝",
-  "Robô aspirador dos sonhos 🧹",
+  "Geladeira dos sonhos 🧊",
   "Kit pipoca e cobertor 🍿",
   "Cota mercado pós-casamento 🛒",
   "Cota sofá dos cochilos 🛋️",
@@ -28,7 +28,7 @@ const giftPrices = {
   "PIX do amor 💸": "A partir de R$ 100,00",
   "Netflix 🎬": "R$ 240,00",
   "Jantar sem lavar louça 🍝": "R$ 300,00",
-  "Robô aspirador dos sonhos 🧹": "18 cotas de R$ 100,00",
+  "Geladeira dos sonhos 🧊": "18 cotas de R$ 166,66",
   "Kit pipoca e cobertor 🍿": "R$ 180,00",
   "Cota mercado pós-casamento 🛒": "5 cotas de R$ 100,00",
   "Cota sofá dos cochilos 🛋️": "10 cotas de R$ 100,00",
@@ -142,9 +142,7 @@ export default function GiftList() {
                   {gift}
                 </div>
 
-                <div className="text-sm font-semibold text-green-600 mt-1">
-                  {giftPrices[gift]}
-                </div>
+                
 
                 <div className="text-sm text-gray-400 mt-1">
                   {taken ? "Já escolhido 💔" : "Clique para escolher"}
