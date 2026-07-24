@@ -142,6 +142,10 @@ export default function GiftList() {
                   {gift}
                 </div>
 
+                <div className="text-sm font-semibold text-green-600 mt-1">
+                  {giftPrices[gift]}
+                </div>
+
                 
 
                 <div className="text-sm text-gray-400 mt-1">
@@ -151,10 +155,6 @@ export default function GiftList() {
               </button>
             )
           })}
-
-          <div className="text-sm font-semibold text-green-600 mt-1">
-           {giftPrices[gift]}
-          </div>
 
         </div>
 
