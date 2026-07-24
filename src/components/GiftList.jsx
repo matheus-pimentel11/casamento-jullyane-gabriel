@@ -152,6 +152,10 @@ export default function GiftList() {
             )
           })}
 
+          <div className="text-sm font-semibold text-green-600 mt-1">
+           {giftPrices[gift]}
+          </div>
+
         </div>
 
       </div>
