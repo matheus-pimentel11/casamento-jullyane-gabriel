@@ -137,6 +137,9 @@ export default function GiftList() {
                   }
                 `}
               >
+                <div className="absolute top-4 right-4 text-sm text-gray-400">
+                  {giftPrices[gift] || "Valor a combinar"}
+                </div>
 
                 <div className="text-lg font-medium">
                   {gift}
