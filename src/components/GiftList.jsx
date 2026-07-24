@@ -141,13 +141,6 @@ export default function GiftList() {
                 <div className="text-lg font-medium">
                   {gift}
                 </div>
-
-                <div className="text-sm font-semibold text-green-600 mt-1">
-                  {giftPrices[gift]}
-                </div>
-
-                
-
                 <div className="text-sm text-gray-400 mt-1">
                   {taken ? "Já escolhido 💔" : "Clique para escolher"}
                 </div>
