@@ -28,7 +28,7 @@ const giftPrices = {
   "PIX do amor 💸": "A partir de R$ 100,00",
   "Netflix 🎬": "R$ 240,00",
   "Jantar sem lavar louça 🍝": "R$ 300,00",
-  "Geladeira dos sonhos 🧊": "18 cotas de R$ 166,66",
+  "Geladeira dos sonhos 🧊": "18 cotas de R$ 100,00",
   "Kit pipoca e cobertor 🍿": "R$ 180,00",
   "Cota mercado pós-casamento 🛒": "5 cotas de R$ 100,00",
   "Cota sofá dos cochilos 🛋️": "10 cotas de R$ 100,00",
